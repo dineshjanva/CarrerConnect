@@ -1,0 +1,116 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Color Variables */
+:root {
+    --primary-blue: #0a66c2;
+    --dark-blue: #084482;
+    --light-blue: #e6f0ff;
+    --white: #ffffff;
+    --dark-gray: #333333;
+    --medium-gray: #666666;
+    --light-gray: #f5f5f5;
+    --sidebar-bg: #2c3e50;
+    --sidebar-hover: #34495e;
+    --green: #28a745;
+    --orange: #fd7e14;
+    --purple: #6f42c1;
+    --danger: #dc3545;
+}
+
+body {
+    background-color: #f5f7fa;
+    color: var(--dark-gray);
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    background-color: var(--sidebar-bg);
+    color: white;
+    height: 100vh;
+    position: fixed;
+    transition: all 0.3s;
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-header h2 {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+}
+
+.sidebar-header h2 i {
+    margin-right: 10px;
+    color: var(--primary-blue);
+}
+
+.sidebar-menu {
+    padding: 20px 0;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s;
+    border-left: 3px solid transparent;
+}
+
+.menu-item:hover {
+    background-color: var(--sidebar-hover);
+    color: white;
+}
+
+.menu-item.active {
+    background-color: var(--sidebar-hover);
+    color: white;
+    border-left: 3px solid var(--primary-blue);
+}
+
+.menu-item i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.menu-item.active i {
+    color: var(--primary-blue);
+}
+
+.submenu {
+    padding-left: 45px;
+    display: none;
+}
+
+.submenu a {
+    display: block;
+    padding: 10px 0;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.submenu a:hover {
+    color: white;
+}
+
+.submenu a.active {
+    color: var(--primary-blue);
+}
+
+.has-submenu.active .submenu {
+    display: block;
+}

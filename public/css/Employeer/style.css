@@ -1,0 +1,486 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+    --primary-blue: #0a66c2;
+    --dark-blue: #084482;
+    --light-blue: #e6f0ff;
+    --white: #ffffff;
+    --dark-gray: #333333;
+    --medium-gray: #666666;
+    --light-gray: #f5f5f5;
+}
+
+body {
+    background-color: #f8f9fa;
+    color: var(--dark-gray);
+    line-height: 1.6;
+}
+
+/* Header Styles */
+header {
+    background-color: var(--white);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-blue);
+    text-decoration: none;
+}
+
+.logo i {
+    margin-right: 10px;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+}
+
+nav ul li {
+    margin-left: 30px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--dark-gray);
+    font-weight: 500;
+    font-size: 16px;
+    padding: 8px 0;
+    position: relative;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: var(--primary-blue);
+}
+
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-blue);
+    transition: width 0.3s;
+}
+
+nav ul li a:hover::after {
+    width: 100%;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+}
+
+.profile-btn {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.profile-btn img {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+/* Job Posting Section */
+.post-job-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.page-header h1 {
+    font-size: 36px;
+    color: var(--primary-blue);
+    margin-bottom: 15px;
+}
+
+.page-header p {
+    font-size: 18px;
+    color: var(--medium-gray);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.post-job-form {
+    display: flex;
+    gap: 40px;
+}
+
+.form-container {
+    flex: 1;
+    background-color: var(--white);
+    padding: 40px;
+    border: 1px solid #eee;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.form-section {
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-size: 24px;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary-blue);
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark-gray);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+}
+
+.form-group textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.checkbox-group input {
+    width: auto;
+}
+
+.skills-input {
+    display: flex;
+    gap: 10px;
+}
+
+.skills-input input {
+    flex: 1;
+}
+
+.add-skill-btn {
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 0 20px;
+    cursor: pointer;
+}
+
+.skills-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.skill-tag {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.remove-skill {
+    cursor: pointer;
+}
+
+.preview-container {
+    flex: 0 0 400px;
+}
+
+.preview-card {
+    background-color: var(--white);
+    padding: 30px;
+    border: 1px solid #eee;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 100px;
+}
+
+.preview-title {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--primary-blue);
+}
+
+.preview-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.preview-company {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: var(--dark-gray);
+}
+
+.preview-job-title {
+    font-size: 20px;
+    color: var(--primary-blue);
+    margin-bottom: 5px;
+}
+
+.preview-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.preview-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--medium-gray);
+}
+
+.preview-meta-item i {
+    color: var(--primary-blue);
+}
+
+.preview-section {
+    margin-bottom: 25px;
+}
+
+.preview-section-title {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: var(--dark-gray);
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.preview-content {
+    color: var(--medium-gray);
+    line-height: 1.7;
+}
+
+.preview-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.preview-skill {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+    padding: 5px 15px;
+    font-weight: 600;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.save-draft-btn {
+    background-color: var(--light-gray);
+    color: var(--dark-gray);
+    border: none;
+    padding: 15px 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.save-draft-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.post-job-btn {
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex: 1;
+}
+
+.post-job-btn:hover {
+    background-color: var(--dark-blue);
+}
+
+/* Footer */
+footer {
+    background-color: var(--dark-gray);
+    color: var(--white);
+    padding: 70px 20px 30px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-bottom: 50px;
+}
+
+.footer-col h3 {
+    font-size: 20px;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.footer-col h3::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background-color: var(--primary-blue);
+}
+
+.footer-col ul {
+    list-style: none;
+}
+
+.footer-col ul li {
+    margin-bottom: 15px;
+}
+
+.footer-col ul li a {
+    color: #aaa;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-col ul li a:hover {
+    color: var(--white);
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.social-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--white);
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.social-links a:hover {
+    background-color: var(--primary-blue);
+}
+
+.copyright {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: #aaa;
+    font-size: 14px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .post-job-form {
+        flex-direction: column;
+    }
+
+    .preview-container {
+        flex: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    nav {
+        display: none;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .page-header h1 {
+        font-size: 28px;
+    }
+
+    .section-title {
+        font-size: 22px;
+    }
+
+    .form-container {
+        padding: 30px 20px;
+    }
+}
