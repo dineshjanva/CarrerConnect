@@ -18,7 +18,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'sanctum' => \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'admin_Auth' => \App\Http\Middleware\AdminAuth::class,
             'set_locale' => \App\Http\Middleware\SetLocale::class,
-            'redirectAdmin' => \App\Http\Middleware\RedirectAdminFromPublicPages::class,
         ]);
 
     })
