@@ -42,13 +42,16 @@ Route::middleware('set_locale')->controller(WebsiteController::class)->group(fun
     Route::get('/about', 'about')->name('about');
 
     Route::get('/find-jobs', 'findJob')->name('user.find_job');
-    Route::post('/search/job', 'searchJob')->name('job.search');
 
     // Other links
     Route::get('/companies', 'company')->name('company');
 });
 
 //  job Seeker
+Route::middleware(['set_locale'])->controller(UserController::class)->group(function () {
+    Route::post('/search/job', 'searchJob')->name('job.search');
+});
+
 Route::middleware(['auth', 'set_locale'])->controller(UserController::class)->group(function () {
 
     Route::get('candidate', 'allUser')->name('websiteUser');

@@ -21,6 +21,7 @@ class UserController extends Controller
 
     public function searchJob(Request $request)
     {
+        // dd($request);
         $validated = $request->validate([
 
             'search' => 'nullable|string|max:255',

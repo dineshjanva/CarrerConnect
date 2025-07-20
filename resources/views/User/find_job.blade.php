@@ -117,6 +117,7 @@
 
         <div class="job-listings">
             <!-- Job Listing 1 -->
+            {{-- @dd($lastestJobData) --}}
             @if ($lastestJobData->count() === 0)
                 <div class="job-card" style="display: flex; justify-content: center; align-items: center;">
                     <h2>Sorry no job Found! 😢</h2>
