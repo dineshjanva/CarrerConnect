@@ -35,27 +35,32 @@
                         <div class="form-group">
                             <label for="jobTitle">Job Title *</label>
                             <input type="text" id="jobTitle" name="job_title"
-                                placeholder="e.g. Senior Frontend Developer" required>
+                                placeholder="e.g. Senior Frontend Developer" required value="{{ old('job_title') }}">
                             @error('job_title') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="companyName">Company Name *</label>
                             <input type="text" id="companyName" name="company_name" placeholder="e.g. TechCorp Inc."
                                 required>
                             @error('company_name') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
+                        </div> --}}
 
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="jobType">Job Type *</label>
                                 <select id="jobType" name="job_type" required>
                                     <option value="">Select Job Type</option>
-                                    <option value="full-time">Full-time</option>
-                                    <option value="part-time">Part-time</option>
-                                    <option value="contract">Contract</option>
-                                    <option value="internship">Internship</option>
-                                    <option value="remote">Remote</option>
+                                    <option value="full-time" {{ old('job_type') == 'full-time' ? 'selected' : '' }}>
+                                        Full-time</option>
+                                    <option value="part-time" {{ old('job_type') == 'part-time' ? 'selected' : '' }}>
+                                        Part-time</option>
+                                    <option value="contract" {{ old('job_type') == 'contract' ? 'selected' : '' }}>
+                                        Contract</option>
+                                    <option value="internship" {{ old('job_type') == 'internship' ? 'selected' : '' }}>
+                                        Internship</option>
+                                    <option value="remote" {{ old('job_type') == 'remote' ? 'selected' : '' }}>Remote
+                                    </option>
                                 </select>
                                 @error('job_type') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
@@ -64,10 +69,13 @@
                                 <label for="experienceLevel">Experience Level *</label>
                                 <select id="experienceLevel" name="experience_level" required>
                                     <option value="">Select Experience Level</option>
-                                    <option value="entry">Entry Level</option>
-                                    <option value="mid">Mid Level</option>
-                                    <option value="senior">Senior Level</option>
-                                    <option value="executive">Executive</option>
+                                    <option value="entry" {{ old('experience_level') == 'entry' ? 'selected' : '' }}>Entry
+                                        Level</option>
+                                    <option value="mid" {{ old('experience_level') == 'mid' ? 'selected' : '' }}>Mid Level
+                                    </option>
+                                    <option value="senior" {{ old('experience_level') == 'senior' ? 'selected' : '' }}>
+                                        Senior Level</option>
+                                    <option value="executive" {{ old('experience_level') == 'executive' ? 'selected' : '' }}>Executive</option>
                                 </select>
                                 @error('experience_level') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
@@ -77,14 +85,15 @@
                             <div class="form-group">
                                 <label for="location">Location *</label>
                                 <input type="text" id="location" name="location"
-                                    placeholder="e.g. San Francisco, CA or Remote" required>
+                                    placeholder="e.g. San Francisco, CA or Remote" required
+                                    value="{{ old('location') }}">
                                 @error('location') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="form-group">
                                 <label for="salaryRange">Salary Range</label>
-                                <input type="text" id="salaryRange" name="salary_range"
-                                    placeholder="e.g. 100000-130000">
+                                <input type="text" id="salaryRange" name="salary_range" placeholder="e.g. 100000-130000"
+                                    value="{{ old('salary_range') }}">
                                 @error('salary_range') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
@@ -92,7 +101,8 @@
                         <div class="form-group">
                             <label for="applicationUrl">Application URL or Email *</label>
                             <input type="text" id="applicationUrl" name="application_url"
-                                placeholder="https://yourcompany.com/apply or jobs@company.com" required>
+                                placeholder="https://yourcompany.com/apply or jobs@company.com" required
+                                value="{{ old('application_url') }}">
                             @error('application_url') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -105,28 +115,30 @@
                             <label for="jobDescription">Job Description *</label>
                             <textarea id="jobDescription" name="job_description"
                                 placeholder="Describe the role, responsibilities, and expectations..."
-                                required></textarea>
+                                required>{{ old('job_description') }}</textarea>
                             @error('job_description') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="form-group">
                             <label for="responsibilities">Key Responsibilities *</label>
                             <textarea id="responsibilities" name="responsibilities"
-                                placeholder="List the main responsibilities of the role..." required></textarea>
+                                placeholder="List the main responsibilities of the role..."
+                                required>{{ old('responsibilities') }}</textarea>
                             @error('responsibilities') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="form-group">
                             <label for="requirements">Requirements & Qualifications *</label>
                             <textarea id="requirements" name="requirements"
-                                placeholder="List the required skills and qualifications..." required></textarea>
+                                placeholder="List the required skills and qualifications..."
+                                required>{{ old('requirements') }}</textarea>
                             @error('requirements') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="form-group">
                             <label for="benefits">Benefits & Perks</label>
                             <textarea id="benefits" name="benefits"
-                                placeholder="List any benefits or perks offered..."></textarea>
+                                placeholder="List any benefits or perks offered...">{{ old('benefits') }}</textarea>
                             @error('benefits') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -138,18 +150,18 @@
                         <div class="form-group">
                             <label>Required Skills</label>
                             <input type="text" id="skillInput" name="required_skills[]"
-                                placeholder="Add skills (optional)">
+                                placeholder="Add skills (optional)" value="{{ old('required_skills.0') }}">
                             @error('required_skills') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="form-group">
                             <label>Preferred Qualifications</label>
                             <div class="checkbox-group">
-                                <input type="checkbox" id="bachelorDegree" name="bachelor_degree" value="1">
+                                <input type="checkbox" id="bachelorDegree" name="bachelor_degree" value="1" {{ old('bachelor_degree') ? 'checked' : '' }}>
                                 <label for="bachelorDegree">Bachelor's Degree</label>
                             </div>
                             <div class="checkbox-group">
-                                <input type="checkbox" id="portfolioRequired" name="portfolio_required" value="1">
+                                <input type="checkbox" id="portfolioRequired" name="portfolio_required" value="1" {{ old('portfolio_required') ? 'checked' : '' }}>
                                 <label for="portfolioRequired">Portfolio or GitHub profile</label>
                             </div>
                             @error('bachelor_degree') <span class="text-danger">{{ $message }}</span> @enderror
@@ -164,14 +176,15 @@
                         <div class="form-group">
                             <label for="aboutCompany">About Your Company *</label>
                             <textarea id="aboutCompany" name="about_company"
-                                placeholder="Write a brief introduction about your company..." required></textarea>
+                                placeholder="Write a brief introduction about your company..."
+                                required>{{ old('about_company') }}</textarea>
                             @error('about_company') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="form-group">
                             <label for="companyWebsite">Company Website</label>
                             <input type="url" id="companyWebsite" name="company_website"
-                                placeholder="https://yourcompany.com">
+                                placeholder="https://yourcompany.com" value="{{ old('company_website') }}">
                             @error('company_website') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
@@ -251,7 +264,7 @@
     <script>
         function previewJob() {
             // Company and Job Title
-            document.querySelector('.preview-company').innerText = document.getElementById('companyName').value;
+            // document.querySelector('.preview-company').innerText = document.getElementById('companyName').value;
             document.querySelector('.preview-job-title').innerText = document.getElementById('jobTitle').value;
 
             // Meta

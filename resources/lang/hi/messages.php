@@ -12,6 +12,7 @@ return [
         'add_job_post' => 'नौकरी पोस्ट जोड़ें',
         'login' => 'लॉग इन',
         'register' => 'रजिस्टर करें',
+        'dashboard' => 'डैशबोर्ड',
     ],
 
     'welcome' => 'CareerConnect में आपका स्वागत है',

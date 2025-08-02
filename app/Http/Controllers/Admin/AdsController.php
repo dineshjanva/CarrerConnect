@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\AdCampaign;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 class AdsController extends Controller
 {
     /**
@@ -14,8 +17,10 @@ class AdsController extends Controller
     public function index()
     {
         //
-        return view('admin.ads.index');
+        $ads = AdCampaign::get();
+        return view('admin.ads.index', compact('ads'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -23,6 +28,7 @@ class AdsController extends Controller
     public function create()
     {
         //
+        return view('admin.ads.add_ads');
     }
 
     /**
@@ -32,25 +38,6 @@ class AdsController extends Controller
     {
         //
         $validator = Validator::make($request->all(), [
-            //     'campaign_name' => 'required|string|max:255',
-            //     'ad_type' => 'required|in:banner,sponsored,popup',
-            //     'status' => 'required|in:active,paused,pending',
-            //     'description' => 'nullable|string',
-            //     'headline' => 'required|string|max:255',
-            //     'ad_description' => 'required|string',
-            //     'cta' => 'required|string|max:255',
-            //     'destination_url' => 'required|url',
-            //     'start_date' => 'required|date',
-            //     'end_date' => 'required|date|after_or_equal:start_date',
-            // 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-
-            //     // 'name' => 'required|string|max:255',
-            //     'total_budget' => 'required|numeric|min:1',
-            //     'bid_strategy' => 'required|in:cpc,cpm,cpa',
-            //     'bid_amount' => 'required|numeric|min:0.1',
-
-            //     'target_audience' => 'required|array|min:1',
-            //     'target_audience.*' => 'in:job_seekers,employers,recruiters',
             'campaign_name' => 'required|string|max:255',
             'ad_type' => 'required|in:banner,sponsored,popup',
             'status' => 'required|in:active,paused,pending',
@@ -113,6 +100,8 @@ class AdsController extends Controller
     public function edit(string $id)
     {
         //
+        $ad = AdCampaign::findOrFail($id);
+        return view('admin.ads.edit', compact('ad'));
     }
 
     /**
@@ -120,7 +109,45 @@ class AdsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'campaign_name' => 'required|string|max:255',
+            'ad_type' => 'required|in:banner,video',
+            'status' => 'required|in:active,paused',
+            'headline' => 'nullable|string|max:255',
+            'ad_description' => 'nullable|string',
+            'cta' => 'nullable|string|max:100',
+            'destination_url' => 'nullable|url|max:255',
+            'creative_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+
+            'target_audience' => 'nullable|array',
+            'target_audience.*' => 'string|in:job_seekers,employers,students',
+
+            'start_date' => 'required|date|',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'total_budget' => 'nullable|numeric|min:0',
+
+            'bid_strategy' => 'nullable|in:cpc,cpm',
+            'bid_amount' => 'nullable|numeric|min:0',
+        ]);
+
+
+        $ad = AdCampaign::findOrFail($id);
+
+        if ($request->hasFile('creative_image')) {
+            if ($ad->creative_image && \Storage::disk('public')->exists('ads/' . $ad->creative_image)) {
+                // dd('true');
+                \Storage::disk('public')->delete('ads/' . $ad->creative_image);
+            }
+
+            $file = $request->file('creative_image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('ads', $filename, 'public');
+            $validated['creative_image'] = $filename;
+        }
+
+        $ad->update($validated);
+
+        return redirect()->route('admin.ads')->with('success', 'Ad campaign updated successfully.');
     }
 
     /**
@@ -129,10 +156,43 @@ class AdsController extends Controller
     public function destroy(string $id)
     {
         //
+        Ad::findOrFail($id)->delete();
+        return redirect()->route('admin.ads.index')->with('success', 'Ad deleted');
     }
 
-    public function add_ads()
+
+    public function pause($id)
     {
-        return view('admin.ads.add_ads');
+
+        $ad = AdCampaign::findOrFail($id);
+        if ($ad->status === 'pending') {
+            $ad->status = 'active';
+        } elseif ($ad->status === 'active') {
+            $ad->status = 'paused';
+        } else {
+            $ad->status = 'active';
+        }
+
+        $ad->save();
+        return redirect()->back()->with('success', 'Ad paused');
+    }
+
+    public function stats($id)
+    {
+        $ad = AdCampaign::findOrFail($id);
+
+        // $weeklyClicks = DB::table('AdCampaign')
+        //     ->select(
+        //         DB::raw("WEEK(created_at) as week_number"),
+        //         DB::raw("SUM(total_buget) as total_clicks")
+        //     )
+        //     ->groupBy(DB::raw("WEEK(created_at)"))
+        //     ->orderBy(DB::raw("WEEK(created_at)"))
+        //     ->get();
+        // return view('admin.ads.stats', [
+        //     'weeklyClicks' => $weeklyClicks
+        // ]);
+        // Custom logic to fetch stats
+        return view('admin.ads.stats', compact('ad'));
     }
 }

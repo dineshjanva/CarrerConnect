@@ -16,13 +16,10 @@ class EmployeerController extends Controller
     {
         return view('Employer.index');
     }
-
     public function addJobPost(Request $request)
     {
         $validated = $request->validate([
-
             'job_title' => 'required|string|min:3|max:255',
-            'company_name' => 'required|string|max:255',
             'job_type' => 'required|in:full-time,part-time,contract,internship,remote',
             'experience_level' => 'required|in:entry,mid,senior,executive',
             'location' => 'required|string|max:255',
@@ -40,56 +37,45 @@ class EmployeerController extends Controller
             'company_logo' => 'nullable|file|image|max:2048', // 2MB
         ]);
 
-        // dd($request->all());
+        $path = $request->file('company_logo')?->store('logos', 'public');
 
-        $path = null;
-        if ($request->hasFile('company_logo')) {
-            $path = $request->file('company_logo')->store('logos', 'public');
+        $company = Company::where('user_id', Auth::id())->first();
+        if (!$company) {
+            return back()->withErrors(['company' => 'Company not found.']);
         }
 
-        $compamyId = Company::where('user_id', Auth::id())
-            ->where('company_id', Auth::id())
-            ->first();
-        // dd($request->all());
-        // return $request;
-        // return $compamyId->user_id;
-
         $job = JobPost::create([
-            'company_id' => $compamyId->user_id,
-            'job_title' => $request->job_title,
-            'company_name' => $request->company_name,
-            'job_type' => $request->job_type,
-            'experience_level' => $request->experience_level,
-            'location' => $request->location,
-            'salary_range' => $request->salary_range,
-            'application_url' => $request->application_url,
-            'job_description' => $request->job_description,
-            'responsibilities' => $request->responsibilities,
-            'requirements' => $request->requirements,
-            'benefits' => $request->benefits,
-            'required_skills' => json_encode($request->required_skills),
-            'bachelor_degree' => $request->has('bachelor_degree'),
-            'portfolio_required' => $request->has('portfolio_required'),
-            'about_company' => $request->about_company,
-            'company_website' => $request->company_website,
+            'company_id' => $company->user_id,
+            'job_title' => $validated['job_title'],
+            'job_type' => $validated['job_type'],
+            'company_name' => $company->name ?? '',
+            'experience_level' => $validated['experience_level'],
+            'location' => $validated['location'],
+            'salary_range' => $validated['salary_range'] ?? null,
+            'application_url' => $validated['application_url'],
+            'job_description' => $validated['job_description'],
+            'responsibilities' => $validated['responsibilities'],
+            'requirements' => $validated['requirements'],
+            'benefits' => $validated['benefits'] ?? null,
+            'required_skills' => isset($validated['required_skills']) ? json_encode($validated['required_skills']) : null,
+            'bachelor_degree' => $request->boolean('bachelor_degree'),
+            'portfolio_required' => $request->boolean('portfolio_required'),
+            'about_company' => $validated['about_company'],
+            'company_website' => $validated['company_website'] ?? null,
             'company_logo' => $path,
         ]);
 
-        // create notification
         Notification::create([
-            'company_id' => $compamyId->user_id,
-            'company_name' => $job->company_name,
+            'company_id' => $company->user_id,
+            'company_name' => $company->name ?? '',
             'job_title' => $job->job_title,
             'job_post_id' => $job->id,
-
         ]);
         return back()->with('success', 'Job Post Successfully');
     }
 
     public function companyProfileUpdate(Request $request)
     {
-        // return Auth::id();
-        // return $company;
 
         $validated = $request->validate([
             'company_name' => 'required|string|max:50',
@@ -100,26 +86,22 @@ class EmployeerController extends Controller
             'industry' => 'required|in:Information Technology,finance,healthcare,education,retail',
             'description' => 'nullable|string|max:1000',
         ]);
-        // return $validated;
 
         $company = Company::where('user_id', Auth::id())->first();
 
         if ($company) {
             $company->update([
                 'name' => $validated['company_name'],
-                'tagline' => $validated['tagline'],
+                'tagline' => $validated['tagline'] ?? null,
                 'website' => $validated['website'],
-                'employee_size' => $validated['employee_size'],
-                'location' => $validated['location'],
+                'employee_size' => $validated['employee_size'] ?? null,
+                'location' => $validated['location'] ?? null,
                 'industry' => $validated['industry'],
-                'description' => $validated['description'],
+                'description' => $validated['description'] ?? null,
             ]);
-
             return back()->with('success', 'Company profile updated successfully.');
         }
-
-
-        return back()->with('success', 'Profile updated successfully.');
+        return back()->withErrors(['company' => 'Company not found.']);
     }
 
 

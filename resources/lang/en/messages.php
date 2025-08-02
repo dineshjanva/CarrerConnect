@@ -12,6 +12,7 @@ return [
         'add_job_post' => 'Add Job Post',
         'login' => 'Log In',
         'register' => 'Register',
+        'dashboard' => 'Dashboard',
     ],
 
     'welcome' => 'Welcome to CareerConnect',

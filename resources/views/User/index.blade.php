@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/seeker/landing.css') }}">
     <link rel="stylesheet" href="{{ asset('css/seeker/profile.css') }}">
+    <link rel="icon" type="image/png" href="{{ asset('storage/website_logo/Copilot_20250722_173546.png') }}">
+
 </head>
 
 <body>
@@ -25,7 +27,10 @@
     <section class="hero">
         <div class="hero-container">
             <div class="hero-content">
-                <h1>{!! __('messages.hero.heading', ['highlight' => '<span>' . __('messages.hero.highlight') . '</span>']) !!}
+                <h1>{!! __('messages.hero.heading', [
+    'highlight' => '<span>' . __('messages.hero.highlight') .
+        '</span>'
+]) !!}
                 </h1>
                 <p>{{ __('messages.hero.description') }}</p>
                 <form action="{{ route('job.search') }}" method="post">

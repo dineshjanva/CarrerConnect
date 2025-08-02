@@ -15,33 +15,28 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        //
-        $totalUser = User::whereHas('roles', function ($q) {
-            $q->where('name', 'jobseeker')
-                ->orWhere('name', 'employer');
-        })->count();
+        // Get all users with jobseeker or employer role
+        $userQuery = User::with('roles')->whereHas('roles', function ($q) {
+            $q->whereIn('name', ['jobseeker', 'employer']);
+        });
 
-        $totalMonthUser = User::
-            whereMonth('created_at', Carbon::now()->month)
+        $totalUser = $userQuery->count();
+
+        $totalMonthUser = $userQuery->whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', Carbon::now()->year)
             ->count();
 
-        // Total Employeer
         $totalEmployer = User::whereHas('roles', function ($q) {
-            $q->Where('name', 'employer');
+            $q->where('name', 'employer');
         })->count();
 
-        // return $totalEmployer;
         if ($request->ajax()) {
             $data = User::with('roles');
-
-            // Optional filter by role
             if ($request->has('role') && $request->role != '') {
                 $data->whereHas('roles', function ($q) use ($request) {
                     $q->where('name', $request->role);
                 });
             }
-
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('role', function ($user) {
@@ -50,6 +45,14 @@ class UserController extends Controller
                 ->editColumn('created_at', function ($user) {
                     return $user->created_at->format('d M Y');
                 })
+                ->addColumn('actions', function ($user) {
+                    return '
+                        <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                        <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn" title="Suspend"><i class="fas fa-ban"></i></button>
+                    ';
+                })
+                ->rawColumns(['actions'])
                 ->make(true);
         }
 

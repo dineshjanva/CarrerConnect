@@ -428,9 +428,9 @@
 <body>
 
     <!-- Main Content -->
-    @section('contant')
+    @section('content')
         @if(session('success'))
-            <Span style="color: var(--success)">{{ $message }}</Span>
+            <Span style="color: var(--success)">{{ session('success') }}</Span>
         @endif
         <main class="main-content1">
             <div class="content-container">
@@ -607,11 +607,6 @@
                                              @error('total_budget') <span class="red">{{ $message }}</span> @enderror
                                 </div>
 
-                                {{-- <div class="budget-card">
-                                    <div class="budget-title">Daily Budget</div>
-                                    <div class="budget-value">$<input type="number" class="form-input"
-                                            style="width: 100px; display: inline;" min="0" step="10" value="50"></div>
-                                </div> --}}
 
                                 <div class="budget-card">
     <div class="budget-title">Bid Strategy</div>
@@ -641,9 +636,9 @@
 
                         <!-- Form Actions -->
                         <div class="form-actions">
-                            <button type="button" class="btn-secondary">
+                            <a href="{{ route('admin.ads') }}" class="btn-secondary" style="text-decoration: none">
                                 <i class="fas fa-times"></i> Cancel
-                            </button>
+                            </a>
                             <button type="submit" class="btn-primary">
                                 <i class="fas fa-rocket"></i> Launch Campaign
                             </button>

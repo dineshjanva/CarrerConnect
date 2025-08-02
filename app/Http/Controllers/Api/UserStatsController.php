@@ -72,8 +72,7 @@ class UserStatsController extends Controller
     {
         $companycount = Company::count();
         $userCount = User::role('jobseeker')->count();
-        $quarterCounts = [];
-
+        $adminCount = User::role('admin')->count();
         $year = now()->year;
 
         $quarters = [
@@ -83,25 +82,20 @@ class UserStatsController extends Controller
             'Q4' => [Carbon::create($year, 10, 1), Carbon::create($year, 12, 31)],
         ];
         $quarterCounts = [];
-
         foreach ($quarters as $label => [$start, $end]) {
-            $count = User::role('jobseeker')
-                ->whereBetween('created_at', [$start, $end])
-                ->count();
+            $quarterCounts[$label] = User::role('jobseeker')->whereBetween('created_at', [$start, $end])->count();
+        }
 
-            $quarterCounts[$label] = $count;
+        $yearCounts = [];
+        foreach (range($year - 4, $year) as $y) {
+            $yearCounts[$y] = User::role('jobseeker')->whereYear('created_at', $y)->count();
         }
 
         $data = match ($period) {
-            'month' => ['Admin' => 1, 'Company' => $companycount, 'Seekers' => $userCount],
-            'quarter' => [
-                'Q1' => 12,
-                'Q2' => 95,
-                'Q3' => 110,
-                'Q4' => 87
-            ],
-            'year' => [],
-            default => []
+            'month' => ['Admin' => $adminCount, 'Company' => $companycount, 'Seekers' => $userCount],
+            'quarter' => $quarterCounts,
+            'year' => $yearCounts,
+            default => ['Admin' => $adminCount, 'Company' => $companycount, 'Seekers' => $userCount]
         };
 
         return response()->json($data);

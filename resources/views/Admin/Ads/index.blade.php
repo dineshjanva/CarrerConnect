@@ -439,7 +439,12 @@
             color: var(--teal);
         }
 
-        .type-sponsor {
+        .type-video {
+            background-color: rgba(105, 63, 184, 0.15);
+            color: var(--purple);
+        }
+
+        .type- {
             background-color: rgba(111, 66, 193, 0.15);
             color: var(--purple);
         }
@@ -581,86 +586,7 @@
 </head>
 
 <body>
-    <!-- Header -->
-    {{-- <header>
-        <div class="header-container">
-            <div class="logo">
-                <i class="fas fa-briefcase"></i>
-                <span>CareerConnect</span>
-            </div>
-            <div class="user-menu">
-                <a href="admin-notifications.html" class="notification-btn">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">5</span>
-                </a>
-                <a href="admin-profile.html" class="user-profile">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&h=100&q=80"
-                        alt="Profile">
-                    <div class="user-info">
-                        <div class="user-name">Admin User</div>
-                        <div class="user-role">Ad Manager</div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </header> --}}
-
-    <!-- Sidebar -->
-    {{-- <nav class="sidebar">
-        <ul class="sidebar-menu">
-            <li class="sidebar-title">Main Navigation</li>
-            <li>
-                <a href="">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="">
-                    <i class="fas fa-users"></i>
-                    <span>User Management</span>
-                </a>
-            </li>
-            <li>
-                <a href="">
-                    <i class="fas fa-building"></i>
-                    <span>Companies</span>
-                </a>
-            </li>
-            <li>
-                <a href="">
-                    <i class="fas fa-briefcase"></i>
-                    <span>Job Listings</span>
-                </a>
-            </li>
-            <li>
-                <a href="">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Content Management</span>
-                </a>
-            </li>
-            <li>
-                <a href="" class="active">
-                    <i class="fas fa-ad"></i>
-                    <span>Ads Management</span>
-                </a>
-            </li>
-            <li class="sidebar-title">System</li>
-            <li>
-                <a href="">
-                    <i class="fas fa-cog"></i>
-                    <span>Settings</span>
-                </a>
-            </li>
-            <li>
-                <a href="">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Analytics</span>
-                </a>
-            </li>
-        </ul>
-    </nav> --}}
-    @section('contant')
+    @section('content')
 
         <!-- Main Content -->
         <main class="main-content1">
@@ -791,156 +717,68 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    <div class="ad-title">Tech Talent Recruitment</div>
-                                    <div class="small">ID: AD-2023-001</div>
-                                </td>
-                                <td><span class="ad-type type-banner">Banner</span></td>
-                                <td><span class="ad-status status-active">Active</span></td>
-                                <td>42,189</td>
-                                <td>1,248</td>
-                                <td>2.96%</td>
-                                <td>
-                                    <div>$1,250 / $5,000</div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 25%"></div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="btn btn-primary btn-sm btn-icon">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-outline btn-sm btn-icon">
-                                            <i class="fas fa-chart-bar"></i>
-                                        </button>
-                                        <button class="btn btn-outline btn-sm btn-icon">
-                                            <i class="fas fa-pause"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="ad-title">Remote Work Summit</div>
-                                    <div class="small">ID: AD-2023-045</div>
-                                </td>
-                                <td><span class="ad-type type-sponsor">Sponsored</span></td>
-                                <td><span class="ad-status status-active">Active</span></td>
-                                <td>28,456</td>
-                                <td>842</td>
-                                <td>2.96%</td>
-                                <td>
-                                    <div>$3,800 / $10,000</div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 38%"></div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="btn btn-primary btn-sm btn-icon">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-outline btn-sm btn-icon">
-                                            <i class="fas fa-chart-bar"></i>
-                                        </button>
-                                        <button class="btn btn-outline btn-sm btn-icon">
-                                            <i class="fas fa-pause"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="ad-title">Developer Bootcamp</div>
-                                    <div class="small">ID: AD-2023-087</div>
-                                </td>
-                                <td><span class="ad-type type-popup">Popup</span></td>
-                                <td><span class="ad-status status-active">Active</span></td>
-                                <td>67,831</td>
-                                <td>2,154</td>
-                                <td>3.18%</td>
-                                <td>
-                                    <div>$2,100 / $3,000</div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 70%"></div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="btn btn-primary btn-sm btn-icon">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-outline btn-sm btn-icon">
-                                            <i class="fas fa-chart-bar"></i>
-                                        </button>
-                                        <button class="btn btn-outline btn-sm btn-icon">
-                                            <i class="fas fa-pause"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="ad-title">HR Software Solutions</div>
-                                    <div class="small">ID: AD-2023-112</div>
-                                </td>
-                                <td><span class="ad-type type-banner">Banner</span></td>
-                                <td><span class="ad-status status-active">Active</span></td>
-                                <td>38,765</td>
-                                <td>987</td>
-                                <td>2.55%</td>
-                                <td>
-                                    <div>$1,800 / $4,000</div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 45%"></div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="btn btn-primary btn-sm btn-icon">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-outline btn-sm btn-icon">
-                                            <i class="fas fa-chart-bar"></i>
-                                        </button>
-                                        <button class="btn btn-outline btn-sm btn-icon">
-                                            <i class="fas fa-pause"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="ad-title">Executive Job Board</div>
-                                    <div class="small">ID: AD-2023-125</div>
-                                </td>
-                                <td><span class="ad-type type-sponsor">Sponsored</span></td>
-                                <td><span class="ad-status status-active">Active</span></td>
-                                <td>15,342</td>
-                                <td>512</td>
-                                <td>3.34%</td>
-                                <td>
-                                    <div>$850 / $2,500</div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 34%"></div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="btn btn-primary btn-sm btn-icon">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-outline btn-sm btn-icon">
-                                            <i class="fas fa-chart-bar"></i>
-                                        </button>
-                                        <button class="btn btn-outline btn-sm btn-icon">
-                                            <i class="fas fa-pause"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                            @foreach ($ads as $ad)
+                                <tr>
+                                    <td>
+                                        <div class="ad-title">{{ $ad->campaign_name }}</div>
+                                        <div class="small">ID: AD-{{ $ad->id }}</div>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="ad-type type-{{ strtolower($ad->ad_type) }}">{{ ucfirst($ad->ad_type) }}</span>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="ad-status status-{{ strtolower($ad->status) }}">{{ ucfirst($ad->status) }}</span>
+                                    </td>
+                                    <td>{{ number_format($ad->impressions ?? 0) }}</td>
+                                    <td>{{ number_format($ad->clicks ?? 0) }}</td>
+                                    <td>
+                                        @php
+                                            $ctr = ($ad->impressions ?? 0) > 0 ? number_format(($ad->clicks / $ad->impressions) * 100, 2) : '0.00';
+                                        @endphp
+                                        {{ $ctr }}%
+                                    </td>
+                                    <td>
+                                        @php
+                                            $spent = $ad->spent_amount ?? 900;
+                                            $budget = $ad->total_budget ?? 1;
+                                            $progress = min(100, ($spent / $budget) * 100);
+                                        @endphp
+                                        <div>${{ number_format($spent, 2) }} / ${{ number_format($budget, 2) }}</div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: {{ $progress }}%"></div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="{{ route('admin.ads.edit', $ad->id) }}"
+                                                class="btn btn-primary btn-sm btn-icon">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{{ route('admin.ads.stats', $ad->id) }}"
+                                                class="btn btn-outline btn-sm btn-icon">
+                                                <i class="fas fa-chart-bar"></i>
+                                            </a>
+                                            <form action="{{ route('admin.ads.pause', $ad->id) }}" method="POST"
+                                                style="display: inline;">
+                                                @csrf
+                                                <button class="btn btn-outline btn-sm btn-icon" type="submit"
+                                                    title="Toggle Status">
+                                                    @if($ad->status === 'paused')
+                                                        <i class="fas fa-play text-green-600"></i>
+                                                    @elseif($ad->status === 'active')
+                                                        <i class="fas fa-pause text-red-600"></i>
+                                                    @else
+                                                        <i class="fas fa-clock text-yellow-500"></i>
+                                                    @endif
+                                                </button>
+                                            </form>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -1058,7 +896,6 @@
                     </table>
                 </div> --}}
             </div>
-
             <!-- Footer -->
         </main>
     @endsection
@@ -1066,12 +903,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Create New Ad button
-            // const newAdBtn = document.querySelector('.cms-actions .cms-btn:first-child');
-            // newAdBtn.addEventListener('click', function () {
-            //     alert('Opening new ad creation form...');
-            //     // In a real app, this would open a modal or new page
-            // });
 
             // Pause buttons in active campaigns
             const pauseButtons = document.querySelectorAll('.btn-outline .fa-pause').forEach(icon => {

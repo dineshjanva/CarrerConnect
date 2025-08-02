@@ -64,6 +64,52 @@ class UserController extends Controller
         return view('user.profile.index');
     }
 
+    // public function profileDataInfo()
+    // {
+    //     $user = Auth::user();
+    //     if (request()->hasFile('avatar')) {
+    //         $file = request()->file('avatar');
+    //         $filename = 'avatars/' . uniqid() . '.' . $file->getClientOriginalExtension();
+    //         $path = $file->storeAs('public', $filename);
+    //         $user->avatar = $filename;
+    //         $user->save();
+    //         $avatarUrl = asset('storage/' . $filename);
+    //         return response()->json([
+    //             'success' => true,
+    //             'avatar_url' => $avatarUrl,
+    //         ]);
+    //     }
+    //     return response()->json([
+    //         'success' => false,
+    //         'message' => 'No image uploaded.'
+    //     ]);
+    // }
+
+
+    public function profileDataInfo()
+    {
+        $user = Auth::user();
+        if (request()->hasFile('avatar')) {
+            $file = request()->file('avatar');
+            // Delete old avatar if exists and is not default
+            if ($user->avatar && file_exists(public_path($user->avatar))) {
+                @unlink(public_path($user->avatar));
+            }
+            $filename = 'avatars/' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('avatars'), basename($filename));
+            $user->avatar = $filename;
+            $user->save();
+            $avatarUrl = asset($filename);
+            return response()->json([
+                'success' => true,
+                'avatar_url' => $avatarUrl,
+            ]);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'No image uploaded.'
+        ]);
+    }
     public function profileUpdate(Request $request)
     {
 
@@ -107,6 +153,7 @@ class UserController extends Controller
 
     public function addeduaction(Request $request)
     {
+
 
         if ($request->exp_company) {
 
@@ -309,11 +356,58 @@ class UserController extends Controller
 
     public function allUser()
     {
-        $users = User::whereHas('roles', function ($query) {
+        $query = User::whereHas('roles', function ($query) {
             $query->whereIn('name', ['jobseeker']);
-        })->get();
+        });
 
-        // return $users;
+        // Filter: search (name, lastname, email, bio, about, skills)
+        if (request('search')) {
+            $search = request('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                    ->orWhere('lastname', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%")
+                    ->orWhere('bio', 'like', "%$search%")
+                    ->orWhere('about', 'like', "%$search%")
+                    ->orWhereHas('skills', function ($sq) use ($search) {
+                        $sq->where('skill', 'like', "%$search%");
+                    });
+            });
+        }
+
+        // Filter: location
+        if (request('location')) {
+            $query->where('location', request('location'));
+        }
+
+        // Filter: experience (for demo, filter by bio or add your own logic)
+        if (request('experience')) {
+            $exp = request('experience');
+            $query->where(function ($q) use ($exp) {
+                if ($exp == 'junior') {
+                    $q->where('bio', 'like', '%junior%');
+                } elseif ($exp == 'mid') {
+                    $q->where('bio', 'like', '%mid%');
+                } elseif ($exp == 'senior') {
+                    $q->where('bio', 'like', '%senior%');
+                }
+            });
+        }
+
+        // Filter: role (for demo, filter by bio or add your own logic)
+        if (request('role')) {
+            $role = request('role');
+            $query->where('bio', 'like', "%$role%");
+        }
+
+        // Filter: availability (for demo, filter by a field if available)
+        if (request('availability')) {
+            $avail = request('availability');
+            $query->where('bio', 'like', "%$avail%");
+        }
+
+        $users = $query->with('skills')->paginate(9)->appends(request()->query());
+
         return view('user.candidate.index', compact('users'));
     }
 }

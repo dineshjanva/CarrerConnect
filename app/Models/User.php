@@ -41,8 +41,13 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class)->latest();
     }
 
-    public function JobApplication(){
-        return $this->hasMany(JobApplication::class,'user_id');
+    public function JobApplication()
+    {
+        return $this->hasMany(JobApplication::class, 'user_id');
+    }
+    public function skills()
+    {
+        return $this->hasMany(UserSkill::class);
     }
 
     /**

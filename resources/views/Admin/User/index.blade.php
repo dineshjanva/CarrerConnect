@@ -93,6 +93,7 @@
                             <th>Location</th>
                             <th>Industry</th>
                             <th>Joined Date</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -123,7 +124,19 @@
                                 { data: 'phone', name: 'phone' },
                                 { data: 'location', name: 'location' },
                                 { data: 'industry', name: 'industry' },
-                                { data: 'created_at', name: 'created_at' }
+                                { data: 'created_at', name: 'created_at' },
+                                {
+                                    data: null,
+                                    orderable: false,
+                                    searchable: false,
+                                    render: function (data, type, row) {
+                                        return `
+                                            <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                                            <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                                            <button class="action-btn" title="Suspend"><i class="fas fa-ban"></i></button>
+                                        `;
+                                    }
+                                }
                             ],
                             dom: 'Bfrtip',
                             buttons: [

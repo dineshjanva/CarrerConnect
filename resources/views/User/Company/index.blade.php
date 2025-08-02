@@ -8,6 +8,18 @@
     <link rel="stylesheet" href="{{ asset('css/seeker/profile.css') }}">
     <link rel="stylesheet" href="{{ asset('css/seeker/main.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .company-logo img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border: 2px solid #e6f0ff;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 
 <body>
@@ -18,41 +30,49 @@
     <main class="companies-container">
         <h1 class="page-title">Top Companies Hiring</h1>
 
-        <div class="search-filters">
-            <div class="search-box">
-                <input type="text" placeholder="Search companies...">
+        <form action="{{ route('company') }}" method="get">
+
+            <div class="search-filters">
+                <div class="search-box">
+                    <input type="text" name="search" placeholder="Search companies..." value="{{ request('search') }}">
+                </div>
+                <div class="filter-group">
+                    <select name="industry">
+                        <option value="">Industry</option>
+                        <option value="tech" {{ request('industry') == 'tech' ? 'selected' : '' }}>Technology</option>
+                        <option value="finance" {{ request('industry') == 'finance' ? 'selected' : '' }}>Finance</option>
+                        <option value="healthcare" {{ request('industry') == 'healthcare' ? 'selected' : '' }}>Healthcare
+                        </option>
+                        <option value="retail" {{ request('industry') == 'retail' ? 'selected' : '' }}>Retail</option>
+                        <option value="manufacturing" {{ request('industry') == 'manufacturing' ? 'selected' : '' }}>
+                            Manufacturing</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <select name="location">
+                        <option value="">Location</option>
+                        <option value="usa" {{ request('location') == 'usa' ? 'selected' : '' }}>United States</option>
+                        <option value="uk" {{ request('location') == 'uk' ? 'selected' : '' }}>United Kingdom</option>
+                        <option value="canada" {{ request('location') == 'canada' ? 'selected' : '' }}>Canada</option>
+                        <option value="germany" {{ request('location') == 'germany' ? 'selected' : '' }}>Germany</option>
+                        <option value="india" {{ request('location') == 'india' ? 'selected' : '' }}>India</option>
+                    </select>
+                </div>
+                <div class="filter-btn">
+                    <button type="submit">Search</button>
+                </div>
             </div>
-            <div class="filter-group">
-                <select>
-                    <option value="">Industry</option>
-                    <option value="tech">Technology</option>
-                    <option value="finance">Finance</option>
-                    <option value="healthcare">Healthcare</option>
-                    <option value="retail">Retail</option>
-                    <option value="manufacturing">Manufacturing</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <select>
-                    <option value="">Location</option>
-                    <option value="usa">United States</option>
-                    <option value="uk">United Kingdom</option>
-                    <option value="canada">Canada</option>
-                    <option value="germany">Germany</option>
-                    <option value="india">India</option>
-                </select>
-            </div>
-            <div class="filter-btn">
-                <button>Search</button>
-            </div>
-        </div>
+        </form>
 
         <div class="companies-grid">
             <!-- Company Card 1 -->
-            @foreach ($companyDetails as $c)
-
+            @forelse ($companyDetails as $c)
                 <div class="company-card">
-                    <div class="company-logo">TC</div>
+                    <div class="company-logo">
+                        <img src="{{ $c->avatar && !Str::startsWith($c->avatar, ['http://', 'https://']) ? asset($c->avatar) : ($c->avatar ?: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&h=200&q=80') }}"
+                            alt="{{ $c->name }}" class="candidate-img">
+                    </div>
+
                     <h2 class="company-name">{{ $c->name }}.</h2>
                     <div class="company-industry">{{ $c->industry }}</div>
                     <div class="company-meta">
@@ -72,10 +92,16 @@
                         </a>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="no-results"
+                    style="display:grid; place-items:center; min-height:100px; color:#888; grid-column:1/-1;">
+                    <i class="fas fa-building fa-2x"></i>
+                    <p style="font-size:1.2rem;">No companies found matching your criteria.</p>
+                </div>
+            @endforelse
 
             <!-- Company Card 2 -->
-            <div class="company-card">
+            {{-- <div class="company-card">
                 <div class="company-logo">FD</div>
                 <h2 class="company-name">FutureDesigns</h2>
                 <div class="company-industry">Design · Creative</div>
@@ -138,7 +164,7 @@
                         View Open Positions <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Company Card 5 -->
             <!-- <div class="company-card">
@@ -184,15 +210,23 @@
                 </div>
             </div> -->
         </div>
-
         <div class="pagination">
             <ul>
-                <li><a href="#" class="active">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#"><i class="fas fa-chevron-right"></i></a></li>
+                @if ($companyDetails->lastPage() > 1)
+                    @for ($i = 1; $i <= $companyDetails->lastPage(); $i++)
+                        <li>
+                            <a href="{{ $companyDetails->url($i) }}"
+                                class="{{ $companyDetails->currentPage() == $i ? 'active' : '' }}">
+                                {{ $i }}
+                            </a>
+                        </li>
+                    @endfor
+                    <li>
+                        <a href="{{ $companyDetails->nextPageUrl() ?? '#' }}">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                @endif
             </ul>
         </div>
     </main>

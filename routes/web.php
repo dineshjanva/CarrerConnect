@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Jobseeker\JobApplicationController;
 use App\Http\Controllers\LanguageController;
 
-
-
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -53,9 +51,9 @@ Route::middleware(['set_locale'])->controller(UserController::class)->group(func
 });
 
 Route::middleware(['auth', 'set_locale'])->controller(UserController::class)->group(function () {
-
     Route::get('candidate', 'allUser')->name('websiteUser');
     Route::get('/profile/{id}', 'profiledata')->name('viewProfile');
+    Route::post('/profile-Image', 'profileDataInfo')->name('profileDataInfo');
 
     // Main route add education,experience,skill.
     Route::post('/profile-education', 'addeduaction')->name('addeduaction');
@@ -104,7 +102,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Company Dashboard
-Route::controller(CompanyController::class)->prefix('company')->group(function () {
+Route::middleware(['set_locale'])->controller(CompanyController::class)->prefix('company')->group(function () {
 
     Route::get('/dashboard', 'index')->name('dashboard');
     // Route::get('/job', 'companyJobPost')->name('companyjobpostpage');
@@ -120,39 +118,12 @@ Route::controller(CompanyController::class)->prefix('company')->group(function (
 
 });
 
-// 
+
 Route::view('/faq', 'admin.faq.index');
-
-
-// Route::get('/dashboard', 'index')->name('dashboard');
-// Route::view('/addprodu', 'coupon.setting.index1');
-// Route::view('/view1', 'coupon.setting.view');
-// Route::view('/edit1', 'coupon.setting.edit');
-// Route::view('/page', 'coupon.setting.page');
-
 Route::view('/admin/setting', 'coupon.setting.index');
 
-// Route::view('/categorypage', 'coupon.cate1');
-// Route::view('/report', 'coupon.report');
+
 Route::view('/produts', 'coupon.product');
 Route::view('/payment', 'coupon.payment');
 Route::view('/trans', 'coupon.transaction');
 Route::view('/reg', 'coupon.register');
-// Route::view('/order', 'coupon.setting.orderlisting');
-
-// Route::prefix('users')->group(function () {
-//     Route::post('{user}/address', [\App\Http\Controllers\Controllers\UserController::class, 'saveAddress'])->name('users.address');
-//     Route::post('{user}/kyc', [\App\Http\Controllers\Controllers\UserController::class, 'submitKYC'])->name('users.kyc');
-//     Route::post('{user}/bank-details', [\App\Http\Controllers\Controllers\UserController::class, 'updateBankDetails'])->name('users.bank');
-//     Route::post('{user}/preferences', [\App\Http\Controllers\Controllers\UserController::class, 'savePreferences'])->name('users.preferences');
-// });
-
-
-// Route::get('/order-form', function () {
-//     return view('apitest');
-// });
-
-
-// Route::get('/orders-page', function () {
-//     return view('apifetch');
-// });

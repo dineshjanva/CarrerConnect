@@ -27,8 +27,6 @@ Route::controller(AdminAuthController::class)->group(function () {
 // Admin DashBoard
 Route::middleware('admin_Auth')->get('/', DashboardController::class)->name('admin');
 
-
-
 // Other links 
 Route::middleware('admin_Auth')->group(function () {
 
@@ -62,8 +60,16 @@ Route::middleware('admin_Auth')->group(function () {
 
     Route::controller(AdsController::class)->group(function () {
         Route::get('/ads', 'index')->name('admin.ads');
-        Route::get('/ads-create', 'add_ads')->name('admin.ads.create');
+        Route::get('/ads-create', 'create')->name('admin.ads.create');
         Route::post('/ads-create', 'store')->name('admin.ads.createdata');
+
+        Route::get('ads/{id}/edit', 'edit')->name('admin.ads.edit');
+        Route::put('ads/{id}', 'update')->name('admin.ads.update');
+        // Route::delete('ads/{id}', 'destroy')->name('ads.destroy');
+        // Pause Campaign
+        Route::post('ads/{id}/pause', 'pause')->name('admin.ads.pause');
+        // Ad Statistics (optional)
+        Route::get('ads/{id}/stats', 'stats')->name('admin.ads.stats');
     });
 
     Route::controller(ContactUsController::class)->group(function () {

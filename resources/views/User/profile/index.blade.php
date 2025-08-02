@@ -20,13 +20,17 @@
         <div class="profile-sidebar">
             <div class="profile-card">
                 <div class="profile-header">
-                    <div class="profile-img-container">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&h=200&q=80"
-                            alt="Profile" class="profile-img">
-                        <button class="change-img-btn">
-                            <i class="fas fa-camera"></i>
-                        </button>
-                    </div>
+                   <form id="profileImageForm" action="{{ route('profileDataInfo') }}" method="post" enctype="multipart/form-data">
+                       @csrf
+                       <div class="profile-img-container">
+                           <img id="profilePreview" src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&h=200&q=80' }}"
+                           alt="Profile" class="profile-img">
+                           <input type="file" id="profileImageInput" name="avatar" accept="image/*" style="display:none;">
+                           <button type="button" class="change-img-btn" id="changeImgBtn">
+                               <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                    </form>
                     <h2 class="profile-name">{{ Auth::user()->name }} {{ Auth::user()->lastname }}</h2>
                     <p class="profile-title">{{ Auth::user()->bio ?? 'Add Bio'  }}</p>
 
@@ -43,7 +47,7 @@
                 </div>
                 <div class="profile-actions">
                     <a href="#" class="action-btn primary">View Public Profile</a>
-                    <a href="#" class="action-btn">Add Profile Section</a>
+                    {{-- <a href="#" class="action-btn">Add Profile Section</a> --}}
                     @role('jobseeker')
                     <a href="#" class="action-btn">Download Resume</a>
                     @endrole
@@ -503,10 +507,49 @@
             });
         });
 
-        // Change profile image simulation
-        const changeImgBtn = document.querySelector('.change-img-btn');
-        changeImgBtn.addEventListener('click', function() {
-            alert('Profile image change functionality would open a file dialog in a real application');
+        // AJAX profile image upload
+        const changeImgBtn = document.getElementById('changeImgBtn');
+        const profileImageInput = document.getElementById('profileImageInput');
+        const profileImageForm = document.getElementById('profileImageForm');
+        const profilePreview = document.getElementById('profilePreview');
+
+        changeImgBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            profileImageInput.click();
+        });
+
+        profileImageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                // Preview image
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profilePreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                // AJAX upload
+                const formData = new FormData(profileImageForm);
+                formData.append('_token', '{{ csrf_token() }}');
+                fetch("{{ route('profileDataInfo') }}", {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.avatar_url) {
+                        profilePreview.src = data.avatar_url;
+                    } else {
+                        alert(data.message || 'Image upload failed');
+                    }
+                })
+                .catch(() => {
+                    alert('Image upload failed');
+                });
+            }
         });
 
         // Form cancel buttons

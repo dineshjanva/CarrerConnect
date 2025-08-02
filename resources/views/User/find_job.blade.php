@@ -72,9 +72,12 @@
                 <div class="filter-group">
                     <select name="experience_level">
                         <option value="">Experience Level</option>
-                        <option value="entry" {{ old('experience_level', request('experience_level')) == 'entry' ? 'selected' : '' }}>Entry Level</option>
-                        <option value="mid" {{ old('experience_level', request('experience_level')) == 'mid' ? 'selected' : '' }}>Mid Level</option>
-                        <option value="senior" {{ old('experience_level', request('experience_level')) == 'senior' ? 'selected' : '' }}>Senior Level</option>
+                        <option value="entry" {{ old('experience_level', request('experience_level')) == 'entry'
+    ? 'selected' : '' }}>Entry Level</option>
+                        <option value="mid" {{ old('experience_level', request('experience_level')) == 'mid' ? 'selected'
+    : '' }}>Mid Level</option>
+                        <option value="senior" {{ old('experience_level', request('experience_level')) == 'senior'
+    ? 'selected' : '' }}>Senior Level</option>
 
                     </select>
                     @error('experience_level')
@@ -91,15 +94,59 @@
 
 
         <div class="results-header">
+            <style>
+                @media (max-width: 768px) {
+                    .results-header {
+                        flex-direction: column;
+                        gap: 1rem;
+                        align-items: stretch;
+                        padding: 1rem 0.5rem;
+                        text-align: center;
+                    }
+
+                    .results-count {
+                        font-size: 1rem;
+                        margin-bottom: 0.5rem;
+                    }
+
+                    .sort-by {
+                        width: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 0.5rem;
+                    }
+
+                    .sort-by form {
+                        width: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 0.5rem;
+                        align-items: stretch;
+                    }
+
+                    .sort-by label {
+                        font-size: 1rem;
+                        margin-bottom: 0.2rem;
+                    }
+
+                    .sort-by select {
+                        width: 100%;
+                        font-size: 1rem;
+                        padding: 0.7rem;
+                    }
+
+                    .sort-by button {
+                        width: 100%;
+                        font-size: 1rem;
+                        padding: 0.7rem;
+                    }
+                }
+            </style>
             <div class="results-count">Showing {{ $allJobCount }} Jobs</div>
             <div class="sort-by">
                 <form action="{{ route('user.find_job') }}" method="get">
                     <label for="sort">Sort by:</label>
-                    <!-- <select id="sort" name="filter" value="{{ old('filter') }}">
-                    <option value="newest" value="Newest First">Newest First</option>
-                    <option value="relevance" value="Relevance">Relevance</option>
-                    <option value="salary"  value="Salary: High to Low" >Salary: High to Low</option>
-                </select> -->
                     <select id="sort" name="filter">
                         <option value="newest" {{ request('filter') == 'newest' ? 'selected' : '' }}>Newest First
                         </option>
@@ -116,8 +163,7 @@
         </div>
 
         <div class="job-listings">
-            <!-- Job Listing 1 -->
-            {{-- @dd($lastestJobData) --}}
+
             @if ($lastestJobData->count() === 0)
                 <div class="job-card" style="display: flex; justify-content: center; align-items: center;">
                     <h2>Sorry no job Found! 😢</h2>
@@ -172,7 +218,7 @@
 
                             <div class="job-actions">
                                 <div class="job-type">{{ $l->job_type }}</div>
-                                <a href="{{ route('user.applyjob', ['id' => $l]) }}" class="apply-btn">Apply Now</a>
+                                <a href="{{ route('user.applyjob', ['id' => $l->id]) }}" class="apply-btn">Apply Now</a>
 
                             </div>
 
