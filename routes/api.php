@@ -51,3 +51,5 @@ Route::get('/user-types/{period}', [UserStatsController::class, 'userTypes']);
 // Route::post('/save-security', [UserApiController::class, 'saveSecurity']);
 // Route::post('/save-additional', [UserApiController::class, 'saveAdditional']);
 // });
+
+// route::get("data_come", [UserStatsController::class, "come_data"]);

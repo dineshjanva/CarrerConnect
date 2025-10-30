@@ -1,3 +1,53 @@
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+    // Replace with the actual user ID you want to chat with
+    let chatUserId = null;
+
+    function fetchMessages(userId) {
+        $.post({
+            url: '{{ route('chat') }}',
+            data: {
+                user_id: userId,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (messages) {
+                // Render messages in your chat window
+                let html = '';
+                messages.forEach(function (msg) {
+                    html += `<div class="chat-message ${msg.sender_id == {{ auth()->id() }} ? 'sent' : 'received'}">
+                    <span>${msg.message}</span>
+                    <small>${msg.created_at}</small>
+                </div>`;
+                });
+                $('#chatMessages').html(html);
+            }
+        });
+    }
+
+    $('#sendMessageBtn').on('click', function () {
+        var userId = chatUserId || $('#chatUserId').val();
+        var message = $('#chatInput').val();
+        if (!userId || !message) return;
+        $.post({
+            url: '{{ route('chat.send') }}',
+            data: {
+                user_id: userId,
+                message: message,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (msg) {
+                fetchMessages(userId);
+                $('#chatInput').val('');
+            }
+        });
+    });
+
+    // Example: set chatUserId and fetch messages when a user is selected
+    // $('.user-list-item').on('click', function() {
+    //     chatUserId = $(this).data('userid');
+    //     fetchMessages(chatUserId);
+    // });
+</script>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -495,130 +545,51 @@
             </div>
 
             <div class="chat-list">
-                <!-- Chat item 1 -->
-                <div class="chat-item active">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&h=100&q=80"
-                        alt="Sarah Johnson" class="chat-avatar">
-                    <div class="chat-info">
-                        <div class="chat-header">
-                            <div class="chat-name">Sarah Johnson</div>
-                            <div class="chat-time">10:42 AM</div>
+                {{-- Loop through conversations if available --}}
+                @if(isset($conversations))
+                    @foreach($conversations as $userId => $msgs)
+                        @php
+                            $lastMsg = $msgs->last();
+                            $user = \App\Models\User::find($userId);
+                            $unread = $msgs->where('receiver_id', auth()->id())->where('is_read', false)->count();
+                        @endphp
+                        <div class="chat-item {{ $receiver_id == $userId ? 'active' : '' }}"
+                            onclick="window.location='{{ url('chat/' . $userId) }}'">
+                            <img src="{{ $user && $user->avatar ? asset('avatars/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user?->name) }}"
+                                class="chat-avatar" alt="{{ $user?->name }}">
+                            <div class="chat-info">
+                                <div class="chat-header">
+                                    <div class="chat-name">{{ $user?->name }}</div>
+                                    <div class="chat-time">
+                                        {{ $lastMsg ? \Carbon\Carbon::parse($lastMsg->created_at)->format('h:i A') : '' }}</div>
+                                </div>
+                                <div class="chat-preview">{{ $lastMsg?->message }}</div>
+                                @if($unread > 0)
+                                    <div class="unread-count">{{ $unread }}</div>
+                                @endif
+                            </div>
                         </div>
-                        <div class="chat-preview">Looking forward to our meeting tomorrow!</div>
-                        <div class="unread-count">3</div>
+                    @endforeach
+                @else
+                    <div class="no-chat-selected">
+                        <i class="fas fa-comments"></i>
+                        <h3>No conversations yet</h3>
+                        <p>Start a new chat to connect with others.</p>
                     </div>
-                </div>
-
-                <!-- Chat item 2 -->
-                <div class="chat-item">
-                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=100&h=100&q=80"
-                        alt="TechCorp HR" class="chat-avatar">
-                    <div class="chat-info">
-                        <div class="chat-header">
-                            <div class="chat-name">TechCorp HR</div>
-                            <div class="chat-time">Yesterday</div>
-                        </div>
-                        <div class="chat-preview">We'd like to schedule a second interview...</div>
-                    </div>
-                </div>
-
-                <!-- Chat item 3 -->
-                <div class="chat-item">
-                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=100&h=100&q=80"
-                        alt="Michael Chen" class="chat-avatar">
-                    <div class="chat-info">
-                        <div class="chat-header">
-                            <div class="chat-name">Michael Chen</div>
-                            <div class="chat-time">Oct 12</div>
-                        </div>
-                        <div class="chat-preview">Thanks for the referral! I applied yesterday</div>
-                    </div>
-                </div>
-
-                <!-- Chat item 4 -->
-                <div class="chat-item">
-                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&h=100&q=80"
-                        alt="Alex Morgan" class="chat-avatar">
-                    <div class="chat-info">
-                        <div class="chat-header">
-                            <div class="chat-name">Alex Morgan</div>
-                            <div class="chat-time">Oct 11</div>
-                        </div>
-                        <div class="chat-preview">Are you available for a quick call this week?</div>
-                    </div>
-                </div>
-
-                <!-- Chat item 5 -->
-                <div class="chat-item">
-                    <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=100&h=100&q=80"
-                        alt="David Williams" class="chat-avatar">
-                    <div class="chat-info">
-                        <div class="chat-header">
-                            <div class="chat-name">David Williams</div>
-                            <div class="chat-time">Oct 10</div>
-                        </div>
-                        <div class="chat-preview">I think we should consider a different approach for the project</div>
-                    </div>
-                </div>
-
-                <!-- Chat item 6 -->
-                <div class="chat-item">
-                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&h=100&q=80"
-                        alt="FutureDesigns" class="chat-avatar">
-                    <div class="chat-info">
-                        <div class="chat-header">
-                            <div class="chat-name">FutureDesigns</div>
-                            <div class="chat-time">Oct 9</div>
-                        </div>
-                        <div class="chat-preview">Your application has moved to the next stage</div>
-                    </div>
-                </div>
+                @endif
             </div>
         </div>
 
-        <!-- Message from Sarah -->
-        <!-- <div class="message incoming">
-                    <div class="message-text">Hi John, thanks for connecting! I saw your profile and I think you'd be a great fit for our Senior Frontend Developer role.</div>
-                    <div class="message-time">10:30 AM</div>
-                </div> -->
-
-        <!-- Message from John -->
-        <!-- <div class="message outgoing">
-                    <div class="message-text">Hi Sarah, thanks for reaching out! I'm definitely interested. Can you share more details about the position?</div>
-                    <div class="message-time">10:32 AM</div>
-                </div> -->
-
-        <!-- Message from Sarah -->
-        <!-- <div class="message incoming">
-                    <div class="message-text">Absolutely! We're looking for someone with expertise in React and TypeScript to lead our frontend team. The role involves building our new customer portal and mentoring junior developers.</div>
-                    <div class="message-time">10:35 AM</div>
-                </div> -->
-
-        <!-- Message from Sarah -->
-        <!-- <div class="message incoming">
-                    <div class="message-text">Here's the job description: <a href="#" style="color: var(--primary-blue);">TechCorp Senior Frontend Developer</a></div>
-                    <div class="message-time">10:35 AM</div>
-                </div> -->
-
-        <!-- Message from John -->
-        <!-- <div class="message outgoing">
-                    <div class="message-text">This looks perfect! I have 5+ years of React experience and have led teams before. I'd love to learn more about your tech stack.</div>
-                    <div class="message-time">10:38 AM</div>
-                </div> -->
-
-        <!-- Message from Sarah -->
-        <!-- <div class="message incoming">
-                    <div class="message-text">Great! Are you available for a quick call tomorrow afternoon? We use React with Redux, TypeScript, and our backend is Node.js with GraphQL.</div>
-                    <div class="message-time">10:40 AM</div>
-                </div> -->
-        <!-- Chat main area -->
         <div class="chat-main">
             <div class="chat-header-bar">
-                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&h=100&q=80"
-                    alt="Sarah Johnson" class="chat-avatar">
+                @php
+                    $receiver = \App\Models\User::find($receiver_id ?? 1);
+                @endphp
+                <img src="{{ $receiver && $receiver->avatar ? asset('avatars/' . $receiver->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($receiver?->name) }}"
+                    class="chat-avatar" alt="{{ $receiver?->name }}">
                 <div class="chat-header-info">
-                    <div class="chat-header-name">Sarah Johnson {{ $receiver_id }}</div>
-                    <div class="chat-header-status">Online now - Recruiter at TechCorp</div>
+                    <div class="chat-header-name">{{ $receiver?->name }}</div>
+                    <div class="chat-header-status">{{ $receiver?->email }}</div>
                 </div>
                 <div class="chat-header-actions">
                     <i class="fas fa-phone-alt action-icon"></i>
@@ -629,69 +600,56 @@
 
 
 
-            <div class="chat-messages">
-                <!-- Message from John -->
-                {{-- @foreach ($messages as $m)
-                <div class="message outgoing">
-                    <div class="message-text">{{ $m->message }}</div>
-                    <div class="message-time">10:42 AM</div>
-                </div>
-                @endforeach --}}
-
+            <div class="chat-messages" id="chatMessages">
+                @foreach ($messages as $m)
+                    <div class="message {{ $m->sender_id == auth()->id() ? 'outgoing' : 'incoming' }}">
+                        <div class="message-text">{{ $m->message }}</div>
+                        <div class="message-time">{{ \Carbon\Carbon::parse($m->created_at)->format('h:i A') }}</div>
+                    </div>
+                @endforeach
             </div>
 
             <!-- ✅ Hidden Inputs -->
             <form id="chatForm">
                 @csrf
                 <input type="hidden" name="receiver_id" id="receiver_id" value="{{ $receiver_id }}">
-
-                <!-- ✅ Your chat input UI inside the form -->
                 <div class="chat-input-area">
                     <i class="fas fa-paperclip input-attach"></i>
-
                     <textarea class="message-input" id="messageInput" name="message" placeholder="Type a message..."
                         rows="1"></textarea>
-
                     <button class="send-btn" type="submit">
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
             </form>
 
-            <!-- ✅ Chat message container (must exist to append messages) -->
-            <div id="chat-box">
-                {{-- Messages will be appended here --}}
-            </div>
-
-            <!-- ✅ jQuery + AJAX -->
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <!-- ✅ jQuery + AJAX -->
             <script>
+                // Auto-scroll to bottom on load
+                $(document).ready(function () {
+                    var chatMessages = document.getElementById('chatMessages');
+                    if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+                });
+
                 $('#chatForm').on('submit', function (e) {
                     e.preventDefault();
-
                     let message = $('#messageInput').val().trim();
                     if (message === '') return;
-
                     $.ajax({
                         url: "{{ route('chat.send') }}",
                         method: "POST",
                         data: $(this).serialize(),
                         success: function (res) {
-                            // Append the new message to .chat-messages
                             const messageHTML = `
-                    <div class="message outgoing">
-                        <div class="message-text">${res.message}</div>
-                        <div class="message-time">Just now</div>
-                    </div>
-                `;
-                            $('.chat-messages').append(messageHTML);
-
-                            // Clear textarea
+                                <div class="message outgoing">
+                                    <div class="message-text">${res.message}</div>
+                                    <div class="message-time">Just now</div>
+                                </div>
+                            `;
+                            $('#chatMessages').append(messageHTML);
                             $('#messageInput').val('').css('height', '46px');
-
-                            // Scroll to bottom
-                            $('.chat-messages').scrollTop($('.chat-messages')[0].scrollHeight);
+                            var chatMessages = document.getElementById('chatMessages');
+                            if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
                         },
                         error: function () {
                             alert('Message failed to send.');
@@ -699,7 +657,7 @@
                     });
                 });
 
-                // Optional: send on Enter without Shift
+                // Send on Enter without Shift
                 $('#messageInput').on('keydown', function (e) {
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
@@ -711,100 +669,6 @@
 
         </div>
     </main>
-
-
-
-    <!-- <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Chat item selection
-            const chatItems = document.querySelectorAll('.chat-item');
-
-            chatItems.forEach(item => {
-                item.addEventListener('click', function () {
-                    // Remove active class from all items
-                    chatItems.forEach(i => i.classList.remove('active'));
-
-                    // Add active class to clicked item
-                    this.classList.add('active');
-
-                    // Reset unread count for this chat
-                    const unreadCount = this.querySelector('.unread-count');
-                    if (unreadCount) {
-                        unreadCount.style.display = 'none';
-                    }
-                });
-            });
-
-            // Message input auto-resize
-            const messageInput = document.querySelector('.message-input');
-
-            messageInput.addEventListener('input', function () {
-                this.style.height = 'auto';
-                this.style.height = (this.scrollHeight) + 'px';
-                if (this.scrollHeight > 120) {
-                    this.style.overflowY = 'auto';
-                } else {
-                    this.style.overflowY = 'hidden';
-                }
-            });
-
-            // Send message functionality
-            const sendButton = document.querySelector('.send-btn');
-
-            sendButton.addEventListener('click', function () {
-                const message = messageInput.value.trim();
-                if (message) {
-                    // Create new outgoing message
-                    const chatMessages = document.querySelector('.chat-messages');
-                    const newMessage = document.createElement('div');
-                    newMessage.className = 'message outgoing';
-                    newMessage.innerHTML = `
-                        <div class="message-text">${message}</div>
-                        <div class="message-time">Just now</div>
-                    `;
-                    chatMessages.appendChild(newMessage);
-
-                    // Clear input
-                    messageInput.value = '';
-                    messageInput.style.height = '46px';
-
-                    // Scroll to bottom
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-                    // Simulate reply after 1-3 seconds
-                    setTimeout(() => {
-                        const replies = [
-                            "Thanks for your message!",
-                            "I'll get back to you soon.",
-                            "That's helpful, thanks!",
-                            "Could you share more details?",
-                            "I'll check and get back to you."
-                        ];
-                        const reply = replies[Math.floor(Math.random() * replies.length)];
-
-                        const replyMessage = document.createElement('div');
-                        replyMessage.className = 'message incoming';
-                        replyMessage.innerHTML = `
-                            <div class="message-text">${reply}</div>
-                            <div class="message-time">Just now</div>
-                        `;
-                        chatMessages.appendChild(replyMessage);
-
-                        // Scroll to bottom again
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                    }, 1000 + Math.random() * 2000);
-                }
-            });
-
-            // Allow sending with Enter key (without Shift)
-            messageInput.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendButton.click();
-                }
-            });
-        });
-    </script>  -->
 </body>
 
 </html>

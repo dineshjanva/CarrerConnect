@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 // use App\Http\Controllers\Controllers\UserController;
 use App\Http\Controllers\Company\EmployeerController;
+use app\Http\Controllers\ChatController;
 
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Auth\GoogleController;
@@ -95,10 +96,16 @@ Route::middleware(['auth', 'set_locale'])->controller(EmployeerController::class
     Route::post('/add-Post', 'addJobPost')->name('addJob.data');
 });
 
-// chats
+// // Chat system routes
 Route::middleware('auth')->group(function () {
+    //     // List all conversations
+    Route::get('/chat', [MessageController::class, 'conversations'])->name('chat.conversations');
+    //     // Show chat with a specific user
     Route::get('/chat', [MessageController::class, 'index'])->name('chat');
-    Route::post('/chat/send', [MessageController::class, 'store'])->name('chat.send');
+    //     // Send a message
+//     Route::post('/chat/send', [MessageController::class, 'store'])->name('chat.send');
+//     // Mark messages as read
+//     Route::post('/chat/read/{sender_id}', [MessageController::class, 'markAsRead'])->name('chat.read');
 });
 
 // Company Dashboard

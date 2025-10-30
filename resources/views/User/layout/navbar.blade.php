@@ -190,12 +190,12 @@
                     <i class="fas fa-bell"></i>
                     <span class="notification-badge">2</span>
                 </a>
-                <a href="{{ route('chat') }}" class="messages-btn">
+                {{-- <a href="{{ route('chat') }}" class="messages-btn">
                     <i class="fas fa-envelope"></i>
-                </a>
+                </a> --}}
                 <a href="{{ route('user.profile') }}" class="profile-btn">
                     <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&h=200&q=80' }}""
-                                    alt=" Profile">
+                                                                    alt=" Profile">
                     <span>{{ Auth::user()->name }} {{ strtoupper(substr(Auth::user()->lastname, 0, 1)) }}.</span>
                 </a>
             </div>

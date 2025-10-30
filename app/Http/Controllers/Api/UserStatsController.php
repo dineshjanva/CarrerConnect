@@ -101,5 +101,10 @@ class UserStatsController extends Controller
         return response()->json($data);
     }
 
+    public function come_data()
+    {
+        $user = User::all();
+        return response()->json(["results" => $user,]);
+    }
 
 }
