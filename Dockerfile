@@ -1,10 +1,34 @@
 # Multi-stage Dockerfile for Laravel with Vite assets
 # Stages: composer (vendor), node_builder (assets), final (php-fpm + nginx)
 
-FROM composer:2 AS composer
+FROM php:8.2-cli AS composer-stage
 WORKDIR /app
+
+# Install system deps required for PHP extensions and composer
+RUN apt-get update && apt-get install -y \
+	git \
+	unzip \
+	zip \
+	libzip-dev \
+	libpng-dev \
+	libjpeg-dev \
+	libfreetype6-dev \
+	libwebp-dev \
+	zlib1g-dev \
+	libicu-dev \
+	libxml2-dev \
+	ca-certificates \
+	&& rm -rf /var/lib/apt/lists/*
+
+# PHP extensions needed during install (ensure platform requirements satisfied)
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+ && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql mbstring exif pcntl bcmath zip intl xml opcache
+
+# Copy composer binary from official composer image
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --prefer-dist --no-scripts --no-interaction --no-progress
+RUN composer install --no-dev --prefer-dist --no-scripts --no-interaction --no-progress --optimize-autoloader
 COPY . .
 RUN composer dump-autoload --optimize
 
