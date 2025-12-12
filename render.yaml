@@ -1,6 +1,18 @@
 services:
   - type: web
     name: carrerconnect
+    env: docker
+    dockerfilePath: Dockerfile
+    autoDeploy: true
+    publishPath: public
+
+# Notes:
+# - Using `env: docker` instructs Render to build and run the provided Dockerfile.
+# - The Dockerfile already handles Composer, Node build, PHP-FPM and nginx startup.
+# - Remove the previous `php artisan serve` startCommand in favor of the container CMD.
+services:
+  - type: web
+    name: carrerconnect
     runtime: php
     buildCommand: |
       composer install --no-dev --optimize-autoloader
